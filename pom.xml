@@ -12,7 +12,9 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.release>17</maven.compiler.release>
+        <maven.compiler.release>25</maven.compiler.release>
+        <!-- Latest 26.2 build. To pin a specific build use e.g. 26.2.build.121-stable -->
+        <paper.api.version>[26.2.build,)</paper.api.version>
     </properties>
 
     <repositories>
@@ -30,13 +32,13 @@
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.19.4-R0.1-SNAPSHOT</version>
+            <version>${paper.api.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.palmergames.bukkit.towny</groupId>
             <artifactId>towny</artifactId>
-            <version>0.103.2.0</version>
+            <version>0.103.0.5</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
@@ -47,10 +49,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
+                <version>3.14.0</version>
                 <configuration>
                     <release>${maven.compiler.release}</release>
-                    <fork>true</fork>
+                    <parameters>true</parameters>
                 </configuration>
             </plugin>
         </plugins>
