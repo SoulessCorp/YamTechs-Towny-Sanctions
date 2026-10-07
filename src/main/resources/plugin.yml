@@ -1,0 +1,19 @@
+name: Sanction
+version: 1.0.0
+main: dev.codex.sanction.SanctionPlugin
+api-version: '1.19'
+description: Nation-level trade embargoes for Towny servers.
+author: Codex
+depend: [Towny]
+commands:
+  sanction:
+    description: Issue, inspect, and lift Towny nation trade embargoes.
+    usage: /sanction
+    aliases: [sanctions]
+permissions:
+  sanction.admin:
+    description: Manage sanctions across all nations.
+    default: op
+  sanction.bypass:
+    description: Bypass trade embargoes.
+    default: op

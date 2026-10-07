@@ -1,0 +1,4 @@
+embargo:
+  block-villager-trading: true
+  block-wandering-trader-trading: true
+  block-piglin-bartering: true
