@@ -31,39 +31,27 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Detected version from pom.xml: $VERSION"
 
-      - name: Get latest release version
-        id: latest
+      - name: Check for an existing release
+        id: release_status
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Get the most recent release tag (if any exist)
-          LATEST_TAG=$(gh release list --limit 1 --json tagName --jq '.[0].tagName' 2>/dev/null || echo "")
+          CURRENT="${{ steps.version.outputs.version }}"
+          TAG="v${CURRENT}"
 
-          if [ -z "$LATEST_TAG" ] || [ "$LATEST_TAG" = "null" ]; then
-            echo "No previous releases found"
-            echo "latest_version=" >> $GITHUB_OUTPUT
-            echo "is_new_version=true" >> $GITHUB_OUTPUT
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already exists; creating a snapshot"
+            echo "is_new_version=false" >> $GITHUB_OUTPUT
           else
-            # Strip leading 'v' if present
-            LATEST_VERSION=${LATEST_TAG#v}
-            echo "Latest release version: $LATEST_VERSION"
-            echo "latest_version=$LATEST_VERSION" >> $GITHUB_OUTPUT
-
-            CURRENT="${{ steps.version.outputs.version }}"
-            if [ "$CURRENT" = "$LATEST_VERSION" ]; then
-              echo "Version has NOT changed → will create snapshot"
-              echo "is_new_version=false" >> $GITHUB_OUTPUT
-            else
-              echo "Version HAS changed → will create clean release"
-              echo "is_new_version=true" >> $GITHUB_OUTPUT
-            fi
+            echo "Release $TAG does not exist; creating a clean release"
+            echo "is_new_version=true" >> $GITHUB_OUTPUT
           fi
 
       - name: Determine JAR name and tag
         id: naming
         run: |
           VERSION="${{ steps.version.outputs.version }}"
-          IS_NEW="${{ steps.latest.outputs.is_new_version }}"
+          IS_NEW="${{ steps.release_status.outputs.is_new_version }}"
 
           if [ "$IS_NEW" = "true" ]; then
             # Clean release for a new version
@@ -78,9 +66,10 @@ jobs:
             fi
           else
             # Snapshot of an existing version
-            TIMESTAMP=$(date -u +%Y%m%d%H%M)
-            JAR_NAME="Sanctionsd-${VERSION}-snapshot-${TIMESTAMP}.jar"
-            TAG="v${VERSION}-snapshot-${TIMESTAMP}"
+            TIMESTAMP=$(date -u +%Y%m%d%H%M%S)
+            RUN_SUFFIX="${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+            JAR_NAME="Sanctions-${VERSION}-snapshot-${TIMESTAMP}-${RUN_SUFFIX}.jar"
+            TAG="v${VERSION}-snapshot-${TIMESTAMP}-${RUN_SUFFIX}"
             RELEASE_NAME="Sanctions ${VERSION} Snapshot (${TIMESTAMP})"
             PRERELEASE=true
           fi
