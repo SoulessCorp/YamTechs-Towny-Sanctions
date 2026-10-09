@@ -4,17 +4,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>dev.codex</groupId>
-    <artifactId>sanction</artifactId>
-    <version>1.0.0</version>
-    <name>Sanction</name>
-    <description>Nation-level trade embargoes for Towny servers.</description>
+    <groupId>yt.yamtechs</groupId>
+    <artifactId>yamtech-sanctions</artifactId>
+    <version>1.1.0</version>
+    <name>YamTech Sanctions</name>
+    <description>Towny trade sanctions and AllyTeam diplomacy.</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.release>25</maven.compiler.release>
-        <!-- Latest 26.2 build. To pin a specific build use e.g. 26.2.build.121-stable -->
-        <paper.api.version>[26.2.build,)</paper.api.version>
+        <maven.compiler.release>17</maven.compiler.release>
     </properties>
 
     <repositories>
@@ -32,28 +30,59 @@
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>${paper.api.version}</version>
+            <version>1.19.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.palmergames.bukkit.towny</groupId>
             <artifactId>towny</artifactId>
-            <version>0.103.0.5</version>
+            <version>0.103.2.0</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.50.3.0</version>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 
     <build>
-        <finalName>Sanction-1.0.0</finalName>
+        <finalName>YamTech-Sanctions</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.14.0</version>
+                <version>3.13.0</version>
                 <configuration>
                     <release>${maven.compiler.release}</release>
-                    <parameters>true</parameters>
+                    <fork>true</fork>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.6.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals><goal>shade</goal></goals>
+                        <configuration>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <minimizeJar>false</minimizeJar>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

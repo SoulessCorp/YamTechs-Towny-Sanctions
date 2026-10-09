@@ -1,19 +1,23 @@
-name: Sanction
-version: 1.0.0
-main: dev.codex.sanction.SanctionPlugin
+name: YamTechSanctions
+version: 1.1.0
+main: yt.yamtechs.sanctions.SanctionsPlugin
 api-version: '1.19'
-description: Nation-level trade embargoes for Towny servers.
-author: Codex
+description: Towny trade sanctions and AllyTeam diplomacy by YamTech.
+author: YamTech
 depend: [Towny]
 commands:
   sanction:
-    description: Issue, inspect, and lift Towny nation trade embargoes.
-    usage: /sanction
+    description: Issue, inspect, and lift Towny trade sanctions.
+    usage: /sanction help
     aliases: [sanctions]
+  allyteam:
+    description: Create AllyTeams and vote on nation sanctions.
+    usage: /allyteam help
+    aliases: [ally]
 permissions:
   sanction.admin:
-    description: Manage sanctions across all nations.
+    description: Manage all YamTech sanctions.
     default: op
   sanction.bypass:
-    description: Bypass trade embargoes.
+    description: Bypass YamTech trade sanctions.
     default: op

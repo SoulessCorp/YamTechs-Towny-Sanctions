@@ -1,3 +1,7 @@
+storage:
+  # YAML is easy to edit manually; SQLITE stores one record per row for larger servers.
+  type: YAML
+
 embargo:
   block-villager-trading: true
   block-wandering-trader-trading: true
